@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Element-ui Vue</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style type="text/css">
+        #app{
+            margin:50px auto 0 auto;
+            width:400px;
+            height:100px;
+        }
+        .text {
+            font-size: 14px;
+        }
+
+        .item {
+            margin-bottom: 18px;
+        }
+
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+        .clearfix:after {
+            clear: both
+        }
+
+        .box-card {
+            width: 480px;
+        }
+        a{
+            color: #000;
+            text-decoration: none;
+        }
+        a:hover{
+            color: green;
+        }
+    </style>
+    <script src="/assets/js/vue.js"></script>
+    <script src="/assets/js/mock.js"></script>
+    <script src="/assets/js/axios.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>{{ column.name }}</span>
+            </div>
+            <div class="text item">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default" v-for="(col,index) in column.menu">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" :href="'#collapse'+index">
+                                    {{ col.column }}
+                                </a>
+                            </h4>
+                        </div>
+                        <div :id="'collapse'+index" class="panel-collapse collapse in">
+                            <div class="panel-body" v-for="pro in col.product">
+                               {{ pro.name }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </el-card>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    // 模拟API数据
+    Mock.mock('http://test.pw',{
+
+        "name": "贷款产品",
+        "menu": [
+            {
+                "column":'保单贷',
+                "product":[
+
+                    {"name":"保单1","time":"2017-10-31"},
+
+                ]
+            },
+            {
+                "column":'企业贷',
+                "product":[
+
+                    {"name":"企业1","time":"2017-10-31"},
+                    {"name":"企业2","time":"2017-10-29"},
+                    {"name":"企业3","time":"2017-10-28"},
+
+                ]
+            },
+        ],
+
+    });
+
+    // Vue
+    new Vue({
+
+        el: "#app",
+
+        data() {
+            return {
+               column: "",
+            }
+        },
+
+        mounted() {
+
+            // 请求模拟数据
+            axios.get('http://test.pw')
+                .then((response)=>{
+                    console.log(response.data);
+                    this.column = response.data;
+                })
+                .catch((error)=> {
+                    console.log(error);
+                });
+        }
+
+    });
+</script>
+
+</html>
