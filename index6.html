@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>日期时间格式转时间戳</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style type="text/css">
+        #app{
+            margin:50px auto 0 auto;
+            width:400px;
+            height:100px;
+        }
+        .text {
+            font-size: 14px;
+        }
+
+        .item {
+            margin-bottom: 18px;
+        }
+
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+        .clearfix:after {
+            clear: both
+        }
+
+        .box-card {
+            width: 480px;
+        }
+        a{
+            color: #000;
+            text-decoration: none;
+        }
+        a:hover{
+            color: green;
+        }
+    </style>
+    <script src="/assets/js/vue.js"></script>
+    <script src="/assets/js/mock.js"></script>
+    <script src="/assets/js/axios.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>{{ product.name }}</span>
+            </div>
+            <div class="text item" v-for="products in product.product">
+                {{ products.name}}------{{ products.time }} 转时间戳：{{ products.time | dateTime }}
+            </div>
+            <br>
+            <div class="text item" v-for="products in product.product">
+                {{ products.name}}------{{ products.time }} 日期格式化：{{ products.time | date }}
+            </div>
+        </el-card>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    // 模拟API数据
+    Mock.mock('http://test.pw',{
+
+        name: "日期时间格式化转时间戳",
+        product: [
+            { name: "信用贷", time: "2017-11-25 15:05:26" },
+            { name: "保单贷", time: "2017-11-25 15:06:10" },
+            { name: "平安贷", time: "2017-11-25 15:08:38" }
+        ]
+
+    });
+
+    // Vue
+    new Vue({
+
+        el: "#app",
+
+        data() {
+            return {
+               product: [],
+            }
+        },
+        methods: {
+            getData() {
+                axios.get('http://test.pw').then((response)=>{
+                        console.log(response.data);
+                        this.product = response.data;
+                    }).catch((error)=> {
+                        console.log(error);
+                    });
+            }
+        },
+        created() {
+            this.getData();
+        },
+        filters: {
+            dateTime(value) {
+
+                // 第一种方法
+               // return new Date(value).getTime() / 1000;
+
+                // 第二种方法
+                let temp = Math.floor(new Date(value).getTime() / 1000);
+                return temp;
+            },
+            date(value) {
+                var d = new Date(value);
+                var year = d.getFullYear();
+                var month = d.getMonth() + 1;
+                var day = d.getDate() <10 ? '0' + d.getDate() : '' + d.getDate();
+                return year+ '-' + month + '-' + day;
+            }
+        }
+    });
+
+</script>
+
+</html>
