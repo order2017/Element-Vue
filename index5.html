@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>时间戳转日期时间格式</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style type="text/css">
+        #app{
+            margin:50px auto 0 auto;
+            width:400px;
+            height:100px;
+        }
+        .text {
+            font-size: 14px;
+        }
+
+        .item {
+            margin-bottom: 18px;
+        }
+
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+        .clearfix:after {
+            clear: both
+        }
+
+        .box-card {
+            width: 480px;
+        }
+        a{
+            color: #000;
+            text-decoration: none;
+        }
+        a:hover{
+            color: green;
+        }
+    </style>
+    <script src="/assets/js/vue.js"></script>
+    <script src="/assets/js/mock.js"></script>
+    <script src="/assets/js/axios.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>{{ product.name }}</span>
+            </div>
+            <div class="text item" v-for="products in product.product">
+                {{ products.name}}------{{ products.time }} 转日期时间：{{ products.time | time }}
+            </div>
+            <br>
+            <div class="text item" v-for="products in product.product">
+                {{ products.name}}------{{ products.time }} 转日期时间：{{ products.time | formatDate }}
+            </div>
+            <br>
+            <div class="text item" v-for="products in product.product">
+                {{ products.name}}------{{ products.time }} 转日期时间：{{ products.time | formatTime }}
+            </div>
+        </el-card>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    // 模拟API数据
+    Mock.mock('http://test.pw',{
+
+        name: "时间戳转日期时间格式",
+        product: [
+            { name: "信用贷", time: "1511588642" },
+            { name: "保单贷", time: "1511588723" },
+            { name: "平安贷", time: "1511588731" }
+        ]
+
+    });
+
+    // Vue
+    new Vue({
+
+        el: "#app",
+
+        data() {
+            return {
+               product: [],
+            }
+        },
+        methods: {
+            getData() {
+                axios.get('http://test.pw').then((response)=>{
+                        console.log(response.data);
+                        this.product = response.data;
+                    }).catch((error)=> {
+                        console.log(error);
+                    });
+            }
+        },
+        created() {
+            this.getData();
+        },
+        filters: {
+            time(value) {
+                console.log(value);
+                return new Date(parseInt(value) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+            },
+            formatDate(value) {
+                function add0(m) {
+                    return m < 10 ? '0' + m : m
+                }
+
+                var time = new Date(parseInt(value) * 1000);
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();
+
+                return y + '-' + add0(m) + '-' + add0(d);
+            },
+            formatTime(value) {
+                function add0(m) {
+                    return m < 10 ? '0' + m : m
+                }
+
+                var time = new Date(parseInt(value) * 1000);
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();
+
+                var h = time.getHours();
+                var mt = time.getMinutes();
+                var s = time.getSeconds();
+
+                return y + '-' + add0(m) + '-' + add0(d) + ' ' + add0(h) + ':' + add0(mt) + ':' + add0(s);
+            }
+        }
+
+    });
+
+</script>
+
+</html>
