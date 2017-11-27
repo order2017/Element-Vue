@@ -96,10 +96,11 @@
         },
         filters: {
             date(value) {
-                console.log(value);
-                let sort = value.split(",");
-                console.log(sort);
-                return sort[0] + "-" + sort[sort.length -1]
+                if (value) {
+                    var sort = value.split(",");
+                    var result = sort[0] + "-" + sort[sort.length -1]
+                }
+                return result
             }
         }
 
